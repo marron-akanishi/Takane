@@ -26,7 +26,7 @@ const results_vm = new Vue({
     hit_count: null,
     current_page: 1,
     page_count: 1,
-    page_limit: 10,
+    page_limit: 15,
     list_pos: 0,
     rest_list: null,
     disp_list: null,
