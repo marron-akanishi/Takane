@@ -35,13 +35,22 @@
           <button v-for="radius in area_radius" type="button" v-on:click="_setArea(radius.id)" v-bind:class="['btn', area_id == radius.id ? 'btn-primary' : 'btn-secondary']">{{radius.name}}</button>
         </div>
       </div>
+      <div class="mb-2 form-inline">
+        <label for="freeword">フリーワード：</label>
+        <input type="text" id="freeword" class="form-control">
+      </div>
       <div style="text-align: center;">
         <button class="btn btn-success" onclick="getRestSearch()">検索！</button>
       </div>
     </div>
     <div id="results">
-      <div v-if="hit_count">{{hit_count}}件見つかりました。</div>
-      <div v-if="hit_count > 100">最初の100件のみ表示します。</div>
+      <div v-if="error">
+        <div>検索時にエラーが発生しました。<br>エラーコード：{{error.code}} {{error.message}}</div>
+      </div>
+      <div v-else>
+        <div v-if="hit_count">{{hit_count}}件見つかりました。</div>
+        <div v-if="hit_count > 100">最初の100件のみ表示します。</div>
+      </div>
       <br>
       <div v-for="rest in disp_list">
         <div class="media border p-2 rest-row" v-on:click="_showDetail(rest)">
@@ -109,7 +118,6 @@
       </div>
     </div>
   </div>
-  <br>
   <!-- 権利表記 -->
   <footer class="footer">
     <div class="text-center">

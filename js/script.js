@@ -30,6 +30,7 @@ const results_vm = new Vue({
     list_pos: 0,
     rest_list: null,
     disp_list: null,
+    error: false,
   },
   methods: {
     // 店舗詳細を開く
@@ -101,11 +102,14 @@ const getRestSearch = async (page) => {
     return;
   }
   // APIにアクセス
+  const freeword = encodeURIComponent(document.querySelector("#freeword").value.replace(/ /g,','));
   const resp = await fetch(`
-    https://api.gnavi.co.jp/RestSearchAPI/v3/?keyid=${API}&latitude=${search_vm.latitude}&longitude=${search_vm.longitude}&range=${search_vm.area_id}&hit_per_page=${GET_MAX}
+    https://api.gnavi.co.jp/RestSearchAPI/v3/?keyid=${API}&latitude=${search_vm.latitude}&longitude=${search_vm.longitude}&range=${search_vm.area_id}&hit_per_page=${GET_MAX}&freeword=${freeword}
   `);
   const json = await resp.json();
   console.log(json);
+  if (json.error != null) results_vm.error = json.error[0];
+  else results_vm.error = null;
   results_vm.hit_count = json.total_hit_count;
   results_vm.rest_list = json.rest;
   // ページャー作成
