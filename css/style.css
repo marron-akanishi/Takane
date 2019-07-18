@@ -16,3 +16,11 @@
   font-size: 20px;
   background: #FFF;
 }
+
+.rest-row {
+  cursor: pointer;
+}
+
+.rest-row:hover {
+  background-color: #b3b3b3;
+}
