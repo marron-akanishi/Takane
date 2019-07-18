@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Takane</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css" />
+  <!-- Load required Bootstrap and BootstrapVue CSS -->
+  <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap/dist/css/bootstrap.min.css" />
+  <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.css" />
+  <!-- Load polyfills to support older browsers -->
+  <script src="//polyfill.io/v3/polyfill.min.js?features=es2015%2CIntersectionObserver" crossorigin="anonymous"></script>
+  <!-- Load Vue followed by BootstrapVue -->
+  <script src="//unpkg.com/vue@latest/dist/vue.min.js"></script>
+  <script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.js"></script>
+</head>
+<body>
+  <!-- ナビ -->
+  <nav class="navbar navbar-dark" style="background-color: #a6126a;">
+    <a class="navbar-brand" href="#">Takane</a>
+  </nav>
+  <!-- メイン -->
+  <div id="app" class="container">
+    <div id="search">
+      <div class="search-title">検索条件</div>
+      <div id="search-pos" class="mt-2 mb-2">
+        現在地：
+        <button class="btn btn-primary btn-sm" v-on:click="_getPos()">取得</button><br>
+        <span v-html="position"></span>
+      </div>
+      <div id="search-area" class="mb-2">
+        <label for="area-dropdown">検索範囲：</label>
+        <div class="btn-group btn-group-sm" role="group" aria-label="area-list">
+          <button v-for="radius in area_radius" type="button" v-on:click="_setArea(radius.id)" v-bind:class="['btn', area_id == radius.id ? 'btn-primary' : 'btn-secondary']">{{radius.name}}</button>
+        </div>
+      </div>
+      <div style="text-align: center;">
+        <button class="btn btn-success" onclick="getRestSearch(0)">検索！</button>
+      </div>
+    </div>
+    <div id="results">
+      {{result}}
+    </div>
+  </div>
+  <br>
+  <!-- 権利表記 -->
+  <footer class="footer">
+    <div class="text-center">
+      Copyright &copy; 2019 Marron Akanishi All Rights Reserved.<br>
+      Supported by <a href="https://api.gnavi.co.jp/api/scope/" target="_blank">ぐるなびWebService</a>
+    </div>
+  </footer>
+  <script src="js/script.js"></script>
+</body>
+</html>
