@@ -1,4 +1,4 @@
-const API = "07cacbf1517416f55af7198667165b95"
+const GNAVI_API = "07cacbf1517416f55af7198667165b95"
 const GET_MAX = 100
 
 // 店舗詳細
@@ -48,7 +48,7 @@ const results_vm = new Vue({
 const search_vm = new Vue({
   el: '#search',
   data: {
-    position: "現在地取得を行ってください",
+    position: "現在地を指定してください",
     area_radius: [
       { id: 1, name: "300m"},
       { id: 2, name: "500m" },
@@ -91,6 +91,28 @@ const search_vm = new Vue({
     _setArea: (index) => {
       search_vm.area_id = index;
     },
+    _openMapModal: () => {
+      // マップの初期化
+      const map = new google.maps.Map(document.querySelector('#search-map'), {
+        zoom: 7,
+        center: { lat: 34.72572149676903, lng: 135.52627421545128 } // 大阪
+      });
+      let marker = new google.maps.Marker();
+      // クリックイベントを追加
+      map.addListener('click', function (e) {
+        // 座標取得
+        search_vm.latitude = e.latLng.lat();
+        search_vm.longitude = e.latLng.lng();
+        // マーカーを設置
+        marker.setPosition(e.latLng);
+        marker.setMap(map);
+        // 座標の中心をずらす
+        this.panTo(e.latLng);
+      });
+    },
+    _setPos: () => {
+      search_vm.position = "緯度: " + search_vm.latitude + ", 経度: " + search_vm.longitude;
+    }
   }
 });
 
@@ -98,20 +120,26 @@ const search_vm = new Vue({
 const getRestSearch = async (page) => {
   // 現在地取得状態の確認
   if(search_vm.latitude == null || search_vm.longitude == null){
-    alert("最初に現在地を取得してください");
+    alert("最初に現在地を指定してください");
     return;
   }
   // APIにアクセス
   const freeword = encodeURIComponent(document.querySelector("#freeword").value.replace(/ /g,','));
   const resp = await fetch(`
-    https://api.gnavi.co.jp/RestSearchAPI/v3/?keyid=${API}&latitude=${search_vm.latitude}&longitude=${search_vm.longitude}&range=${search_vm.area_id}&hit_per_page=${GET_MAX}&freeword=${freeword}
+    https://api.gnavi.co.jp/RestSearchAPI/v3/?keyid=${GNAVI_API}&latitude=${search_vm.latitude}&longitude=${search_vm.longitude}&range=${search_vm.area_id}&hit_per_page=${GET_MAX}&freeword=${freeword}
   `);
   const json = await resp.json();
   console.log(json);
-  if (json.error != null) results_vm.error = json.error[0];
-  else results_vm.error = null;
-  results_vm.hit_count = json.total_hit_count;
-  results_vm.rest_list = json.rest;
+  if (json.error != null){
+    results_vm.error = json.error[0];
+    results_vm.hit_count = 0;
+    results_vm.rest_list = null;
+    results_vm.disp_list = null;
+  } else {
+    results_vm.error = null;
+    results_vm.hit_count = json.total_hit_count;
+    results_vm.rest_list = json.rest;
+  }
   // ページャー作成
   makePageNav(results_vm.page_limit);
   // 表示状態をリセット

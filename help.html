@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>使い方 | Takane</title>
+  <link type="text/css" rel="stylesheet" href="css/github-markdown.css" />
+  <style type="text/css">
+    .markdown-body img {
+      border: solid 1px gray;
+      margin: 0.5rem 0;
+    }
+  </style>
+  <!-- Load required Bootstrap and BootstrapVue CSS -->
+  <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap/dist/css/bootstrap.min.css" />
+  <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.css" />
+  <!-- Load polyfills to support older browsers -->
+  <script src="//polyfill.io/v3/polyfill.min.js?features=es2015%2CIntersectionObserver"
+    crossorigin="anonymous"></script>
+  <!-- Load Vue followed by BootstrapVue -->
+  <script src="//unpkg.com/vue@latest/dist/vue.min.js"></script>
+  <script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.js"></script>
+</head>
+
+<body>
+  <!-- ナビ -->
+  <nav class="navbar navbar-dark" style="background-color: #a6126a;">
+    <div class="container">
+      <a class="navbar-brand" href="/index.html">Takane</a>
+      <div class="navbar-nav">
+        <button type="button" class="btn btn-outline-light">？使い方</button>
+      </div>
+    </div>
+  </nav>
+  <!-- メイン -->
+  <div class="container markdown-body">
+    <h1 style="margin-top: 1rem !important;">Takane</h1>
+    <h2>Takaneとは？</h2>
+    <p>
+      Takaneは現在地の近くにあるレストランを検索出来るサービスです。<br>
+      ぐるなびレストラン検索APIを利用して検索を行っています。
+    </p>
+    <h2>使い方</h2>
+    <p>説明に使用している画像は開発中のものとなります。</p>
+    <h4>1. 検索条件指定</h4>
+    <img src="images/search.png" />
+    <p>
+      最初に一番上にある検索条件に条件を入力します。<br>
+      現在地はGPSを利用して取得する方法とマップから座標を指定する方法の2種類から選べます。<br>
+      GPSを利用する場合は「取得」ボタンを押します。この際に位置情報の利用確認を許可してください。<br>
+      マップから指定する場合は「地図から選択」ボタンを押します。<br>
+      マップが表示されますので、現在地の座標を指定してください。マーカーが表示されれば指定できているので「OK」を押してください。<br>
+      <img src="images/search_map.png" /><br>
+      検索範囲は現在地から半径何mの範囲で検索するかを指定します。初期状態では500mとなっています。<br>
+      フリーワードはジャンルなどを自由に入力出来ます。<br>
+      最後に「検索！」ボタンを押すことで検索を行います。
+    </p>
+    <h4>2. 検索結果一覧</h4>
+    <img src="images/list.png" />
+    <p>
+      検索を行うと条件の下に店舗がリストで表示されます。<br>
+      見つかった店舗数が100件以上の場合は最初の100件のみ表示します。検索範囲やフリーワードで絞り込みを行ってください。<br>
+      1画面につき15件づつ表示されており、一番下でページを切り替えられます。<br>
+      各店舗を押すと店舗詳細が表示されます。
+    </p>
+    <h4>3. 店舗詳細</h4>
+    <img src="images/detail.png" />
+    <p>
+      検索結果一覧で店舗を指定するとこの画面に飛びます。<br>
+      ここでは店舗の詳細情報を確認したり、地図上でどこにあるかを確認できます。<br>
+      また、「ぐるなびで確認」ボタンよりぐるなびの店舗詳細ページに移動できます。<br>
+      検索結果一覧に戻る場合は「一覧に戻る」ボタンを押してください。
+    </p>
+    <h2>ヘルプ</h2>
+    <h3>位置情報が取得できない</h3>
+    <p>
+      「取得」ボタンを押した際にエラーが表示される場合は、位置情報利用が許可されていない可能性があります。<br>
+      許可方法に関しては、お使いのOSやブラウザによって異なりますのでご確認ください。<br>
+      また、位置情報利用を許可したくない場合はマップから指定する方法でお使いください。
+    </p>
+    <h3>検索時にエラーが表示された</h3>
+    <p>
+      フリーワードの条件や現在地によっては、店舗が見つからずエラーが表示される場合があります。<br>
+      この場合は検索条件を変更することで表示される場合があります。
+    </p>
+  </div>
+  <!-- 権利表記 -->
+  <footer class="footer">
+    <div class="text-center">
+      Copyright &copy; 2019 Marron Akanishi All Rights Reserved.<br>
+      Supported by <a href="https://api.gnavi.co.jp/api/scope/" target="_blank">ぐるなびWebService</a><br>
+    </div>
+  </footer>
+</body>
+</html>

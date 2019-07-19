@@ -14,11 +14,17 @@
   <!-- Load Vue followed by BootstrapVue -->
   <script src="//unpkg.com/vue@latest/dist/vue.min.js"></script>
   <script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.js"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAT9_3bq36DqV0e0-QvzTzsXAObSbqSSqk"></script>
 </head>
 <body>
   <!-- ナビ -->
   <nav class="navbar navbar-dark" style="background-color: #a6126a;">
-    <a class="navbar-brand" href="#">Takane</a>
+    <div class="container">
+      <a class="navbar-brand" href="#">Takane</a>
+      <div class="navbar-nav">
+        <button type="button" class="btn btn-outline-light" onclick="location.href = '/help.html'">？使い方</button>
+      </div>
+    </div>
   </nav>
   <!-- メイン -->
   <div id="app" class="container">
@@ -26,9 +32,16 @@
       <div class="search-title">検索条件</div>
       <div id="search-pos" class="mt-2 mb-2">
         現在地：
-        <button class="btn btn-primary btn-sm" v-on:click="_getPos()">取得</button><br>
+        <button class="btn btn-primary btn-sm" v-on:click="_getPos">取得</button>
+        もしくは
+        <b-button variant="primary" size="sm" v-b-modal.map-modal>地図から選択</b-button>
+        <br>
         <span v-html="position"></span>
       </div>
+      <b-modal id="map-modal" title="地図から選択" static="true" @show="_openMapModal" @ok="_setPos">
+        <p>地図から現在地を選択してください。</p>
+        <div id="search-map" style="width:100%; height:400px;"></div>
+      </b-modal>
       <div id="search-area" class="mb-2">
         <label for="area-dropdown">検索範囲：</label>
         <div class="btn-group btn-group-sm" role="group" aria-label="area-list">
@@ -58,11 +71,15 @@
           <img v-else src="images/noimage.png" width="100" class="mr-2" />
           <div class="media-body">
             <h5 class="mt-0">{{rest.name}}</h5>
-            アクセス：
-            <span v-if="rest.access.walk">
-              {{rest.access.line}}{{rest.access.station}}{{rest.access.station_exit}}{{rest.access.walk}}分
-            </span>
-            <span v-else>情報なし</span>
+            <div style="color: #5f5f5f">
+              カテゴリ：
+              <span>{{rest.category}}</span><br>
+              アクセス：
+              <span v-if="rest.access.walk">
+                {{rest.access.line}}{{rest.access.station}}{{rest.access.station_exit}}{{rest.access.walk}}分
+              </span>
+              <span v-else>情報なし</span>
+            </div>
           </div>
         </div>
       </div>
