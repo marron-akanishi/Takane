@@ -57,10 +57,23 @@ const search_vm = new Vue({
       { id: 5, name: "3000m" },
     ],
     area_id: 2,
+    type_list: [
+      { category_l_code: null, category_l_name: "指定なし"}
+    ],
+    type_code: null,
+    type_name: "指定なし",
     latitude: null,
     longitude: null,
+    map_zoom: 7,
   },
   methods: {
+    window:onload = async () => {
+      const resp = await fetch(`
+        https://api.gnavi.co.jp/master/CategoryLargeSearchAPI/v3/?keyid=${GNAVI_API}
+      `);
+      const json = await resp.json();
+      search_vm.type_list = search_vm.type_list.concat(json.category_l);
+    },
     _getPos: () => {
       navigator.geolocation.getCurrentPosition(
         // 取得成功した場合
@@ -92,10 +105,13 @@ const search_vm = new Vue({
       search_vm.area_id = index;
     },
     _openMapModal: () => {
+      // 大阪にするか指定されているか
+      const lat = search_vm.latitude || 34.70238529947451;
+      const lng = search_vm.longitude || 135.49552602848348;
       // マップの初期化
       const map = new google.maps.Map(document.querySelector('#search-map'), {
-        zoom: 7,
-        center: { lat: 34.72572149676903, lng: 135.52627421545128 } // 大阪
+        zoom: search_vm.map_zoom,
+        center: { lat: lat, lng: lng }
       });
       let marker = new google.maps.Marker();
       // クリックイベントを追加
@@ -103,6 +119,7 @@ const search_vm = new Vue({
         // 座標取得
         search_vm.latitude = e.latLng.lat();
         search_vm.longitude = e.latLng.lng();
+        search_vm.map_zoom = map.getZoom();
         // マーカーを設置
         marker.setPosition(e.latLng);
         marker.setMap(map);
@@ -112,6 +129,10 @@ const search_vm = new Vue({
     },
     _setPos: () => {
       search_vm.position = "緯度: " + search_vm.latitude + ", 経度: " + search_vm.longitude;
+    },
+    _setType: (code, name) => {
+      search_vm.type_code = code;
+      search_vm.type_name = name;
     }
   }
 });
@@ -124,10 +145,13 @@ const getRestSearch = async (page) => {
     return;
   }
   // APIにアクセス
-  const freeword = encodeURIComponent(document.querySelector("#freeword").value.replace(/ /g,','));
-  const resp = await fetch(`
-    https://api.gnavi.co.jp/RestSearchAPI/v3/?keyid=${GNAVI_API}&latitude=${search_vm.latitude}&longitude=${search_vm.longitude}&range=${search_vm.area_id}&hit_per_page=${GET_MAX}&freeword=${freeword}
-  `);
+  let url = `https://api.gnavi.co.jp/RestSearchAPI/v3/?keyid=${GNAVI_API}&latitude=${search_vm.latitude}&longitude=${search_vm.longitude}&range=${search_vm.area_id}&hit_per_page=${GET_MAX}`
+  if (document.querySelector("#freeword").value != "") {
+    const freeword = encodeURIComponent(document.querySelector("#freeword").value.replace(/ /g, ','));
+    url += `&freeword=${freeword}`
+  }
+  if (search_vm.type_code != null) url += `&category_l=${search_vm.type_code}`
+  const resp = await fetch(url);
   const json = await resp.json();
   console.log(json);
   if (json.error != null){
