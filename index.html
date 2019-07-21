@@ -28,39 +28,49 @@
   </nav>
   <!-- メイン -->
   <div id="app" class="container">
-    <div id="search">
-      <div class="search-title">検索条件</div>
-      <div id="search-pos" class="mt-2 mb-2">
-        現在地：
-        <button class="btn btn-primary btn-sm" v-on:click="_getPos">取得</button>
-        もしくは
-        <b-button variant="primary" size="sm" v-b-modal.map-modal>地図から選択</b-button>
-        <br>
-        <span v-html="position"></span>
-      </div>
-      <b-modal id="map-modal" title="地図から選択" static="true" @show="_openMapModal" @ok="_setPos">
-        <p>地図から現在地を選択してください。</p>
-        <div id="search-map" style="width:100%; height:400px;"></div>
-      </b-modal>
-      <div id="search-area" class="mb-2">
-        <label for="area-list">検索範囲：</label>
-        <div class="btn-group btn-group-sm" role="group" id="area-list">
-          <button v-for="radius in area_radius" type="button" v-on:click="_setArea(radius.id)" v-bind:class="['btn', area_id == radius.id ? 'btn-primary' : 'btn-secondary']">{{radius.name}}</button>
+    <div id="search" class="row justify-content-center">
+      <div class="col-md-2"></div>
+      <div class="col-11 col-md-8 search-box">
+        <div class="search-title">検索条件</div>
+        <div id="search-pos" class="mt-2">
+          <label>現在地</label>
+          <div style="display: inline-table;">
+            <button class="btn btn-primary btn-sm" v-on:click="_getPos">取得</button>
+            もしくは
+            <b-button variant="primary" size="sm" v-b-modal.map-modal>地図から選択</b-button>
+            <br>
+            <span v-html="position"></span>
+          </div>
+        </div>
+        <hr>
+        <b-modal id="map-modal" title="地図から選択" static="true" @show="_openMapModal" @ok="_setPos">
+          <p>地図から現在地を選択してください。</p>
+          <div id="search-map" style="width:100%; height:350px;"></div>
+        </b-modal>
+        <div id="search-range" class="form-inline">
+          <label for="range-sel">検索範囲</label>
+          <select id="range-sel" class="form-control">
+            <option v-for="range in range_list">{{range.name}}</option>
+          </select>
+        </div>
+        <hr>
+        <div class="form-inline">
+          <label for="type-sel">タイプ</label>
+          <select id="type-sel" class="form-control">
+            <option v-for="type in type_list">{{type.category_l_name}}</option>
+          </select>
+        </div>
+        <hr>
+        <div class="form-inline">
+          <label for="freeword">フリーワード</label>
+          <input type="text" id="freeword" class="form-control">
+        </div>
+        <hr>
+        <div style="text-align: center;">
+          <button class="btn btn-success" onclick="getRestSearch()">検索！</button>
         </div>
       </div>
-      <div class="mb-2 form-inline">
-        <label for="freeword">フリーワード：</label>
-        <input type="text" id="freeword" class="form-control">
-      </div>
-      <div class="mb-2 form-inline">
-        <label for="type-sel">タイプ：</label>
-        <b-dropdown id="type-sel" v-bind:text="type_name">
-          <b-dropdown-item v-for="type in type_list" v-on:click="_setType(type.category_l_code, type.category_l_name)">{{type.category_l_name}}</b-dropdown-item>
-        </b-dropdown>
-      </div>
-      <div style="text-align: center;">
-        <button class="btn btn-success" onclick="getRestSearch()">検索！</button>
-      </div>
+      <div class="col-md-2"></div>
     </div>
     <div id="results">
       <div v-if="error">
@@ -76,7 +86,8 @@
           <img v-if="rest.image_url.shop_image1" v-bind:src="rest.image_url.shop_image1" width="100" class="mr-2" />
           <img v-else src="images/noimage.png" width="100" class="mr-2" />
           <div class="media-body">
-            <h5 class="mt-0">{{rest.name}}</h5>
+            <h5 v-if="rest.distance != 9999" class="mt-0">{{rest.distance}}m：{{rest.name}}</h5>
+            <h5 v-else class="mt-0">不明：{{rest.name}}</h5>
             <div style="color: #5f5f5f">
               カテゴリ：
               <span>{{rest.category}}</span><br>
@@ -133,11 +144,12 @@
             <td>{{detail.holiday}}</td>
           </tr>
         </table>
-        <div class="embed-responsive embed-responsive-4by3">
+        <div v-if="detail.latitude" class="embed-responsive embed-responsive-4by3">
           <iframe class="embed-responsive-item"
             v-bind:src="'https://maps.google.co.jp/maps?output=embed&t=m&hl=ja&z=18&ll='+detail.latitude+','+detail.longitude+'&q='+detail.latitude+','+detail.longitude"
             frameborder="0" scrolling="no"></iframe>
         </div>
+        <div v-else>座標情報を取得出来ないため、地図を表示できません。<br></div>
       </div>
     </div>
   </div>

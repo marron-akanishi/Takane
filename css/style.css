@@ -1,4 +1,4 @@
-#search {
+.search-box {
   position: relative;
   padding: 0.5rem 1rem;
   margin: 1rem 0;
@@ -15,6 +15,16 @@
   line-height: 1;
   font-size: 20px;
   background: #FFF;
+}
+
+#search hr {
+  border: 0.5px dashed #aaaaaa;
+  margin: 0.5rem 0;
+}
+
+#search label{
+  width: 120px;
+  justify-content: left !important;
 }
 
 .rest-row {
