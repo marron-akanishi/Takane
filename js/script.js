@@ -70,7 +70,7 @@ const search_vm = new Vue({
       `);
       const json = await resp.json();
       search_vm.type_list = search_vm.type_list.concat(json.category_l);
-      document.querySelector("#range-sel").selectedIndex = 1;
+      document.querySelector("#range-sel").selectedIndex = 2;
     },
     _getPos: () => {
       // https://qiita.com/akkey2475/items/81f4f94f17bfe5c7ce42
@@ -111,6 +111,11 @@ const search_vm = new Vue({
         center: { lat: lat, lng: lng }
       });
       let marker = new google.maps.Marker();
+      if (search_vm.latitude != null && search_vm.longitude != null) {
+        const latLng = { lat: lat, lng: lng };
+        marker.setPosition(latLng);
+        marker.setMap(map);
+      }
       // クリックイベントを追加
       map.addListener('click', function (e) {
         // 座標取得
@@ -124,8 +129,8 @@ const search_vm = new Vue({
         this.panTo(e.latLng);
       });
     },
-    _setPos: () => {
-      latLng2Address({ lat: search_vm.latitude, lng: search_vm.longitude });
+    _dispPos: () => {
+      if (search_vm.latitude != null && search_vm.longitude != null) latLng2Address({ lat: search_vm.latitude, lng: search_vm.longitude });
     }
   }
 });
@@ -171,7 +176,7 @@ const getRestSearch = async (page) => {
   // APIにアクセス
   const resp = await fetch(url);
   const json = await resp.json();
-  console.log(json);
+  //console.log(json);
   // エラー処理
   if (json.error != null){
     results_vm.error = json.error[0];

@@ -6,7 +6,7 @@
 ## 開発仕様  
 Windows10 + VS Code  
 Vue.js  
-Bootstrap 4  
+BootstrapVue  
 ナウい感じのSPAが作ってみたかったのだ...  
 
 ## 実行方法  

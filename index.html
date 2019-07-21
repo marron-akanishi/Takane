@@ -43,7 +43,7 @@
           </div>
         </div>
         <hr>
-        <b-modal id="map-modal" title="地図から選択" static="true" @show="_openMapModal" @ok="_setPos">
+        <b-modal id="map-modal" title="地図から選択" static="true" @show="_openMapModal" @ok="_dispPos">
           <p>地図から現在地を選択してください。</p>
           <div id="search-map" style="width:100%; height:350px;"></div>
         </b-modal>
@@ -55,17 +55,18 @@
         </div>
         <hr>
         <div class="form-inline">
-          <label for="type-sel">タイプ</label>
+          <label for="type-sel">タイプ*</label>
           <select id="type-sel" class="form-control">
             <option v-for="type in type_list">{{type.category_l_name}}</option>
           </select>
         </div>
         <hr>
         <div class="form-inline">
-          <label for="freeword">フリーワード</label>
+          <label for="freeword">フリーワード*</label>
           <input type="text" id="freeword" class="form-control">
         </div>
         <hr>
+        <div class="mb-2" style="font-size: smaller;">*の付いている項目はオプションです。</div>
         <div style="text-align: center;">
           <button class="btn btn-success" onclick="getRestSearch()">検索！</button>
         </div>
