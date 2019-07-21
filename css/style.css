@@ -34,3 +34,13 @@
 .rest-row:hover {
   background-color: #b3b3b3;
 }
+
+#details img{
+  width: 300px;
+  height: auto;
+  max-width: 90%;
+}
+
+.row-name {
+  width: 100px;
+}
